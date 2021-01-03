@@ -96,35 +96,42 @@ class NotesService {
         }
         if (isCommentValid) {
             comment.noteId = idForComment
+            comment.commentId = if(_commentsList.isEmpty()) 1 else _commentsList.last().commentId + 1
             _commentsList.add(comment)
             comment.commentIndex = _commentsList.lastIndex
         } else print("You cannot create a comment for a non-existing note!")
     }
 
-    fun deleteComment(comment: Comment) {
-        if (_commentsList.contains(comment)) {
-            _commentsDustbin.add(comment)
-            comment.commentIndex = _commentsList.indexOf(comment)
-            _commentsList.remove(comment)
-            println("Comment was successfully moved to the dustbin! You can restore it if you want")
-        } else {
-            println("Failed to find a comment for deletion")
-        }
-    }
-
-    fun restoreComment(comment: Comment) {
-        if (_commentsDustbin.contains(comment)) {
-            _commentsList.add(comment.commentIndex, comment)
-            _commentsDustbin.remove(comment)
-            println("The removed comment was restored and index ${comment.commentIndex + 1}, as if it was never deleted")
-        } else {
-            println("Failed to find a comment to restore")
-        }
-    }
-
-    fun editComment(editedComment: Comment, commentToReplace: Comment) {
+    fun deleteComment(commentId: Long) {
         for (item in _commentsList) {
-            if (item == commentToReplace && item.noteId == editedComment.noteId) {
+            if (item.commentId == commentId) {
+                _commentsDustbin.add(item)
+                item.commentIndex = _commentsList.indexOf(item)
+                _commentsList.remove(item)
+                println("Comment was successfully moved to the dustbin! You can restore it if you want " +
+                        "using the id $commentId")
+                return
+            }
+        }
+        println("Failed to find a comment for deletion")
+        }
+
+
+    fun restoreComment(commentID: Long) {
+        for (item in _commentsDustbin) {
+            if (item.commentId == commentID){
+                _commentsList.add(item.commentIndex, item)
+                _commentsDustbin.remove(item)
+                println("The removed comment was restored and index ${item.commentIndex + 1}, as if it was never deleted")
+                return
+            }
+        }
+        println("Failed to find a comment to restore")
+        }
+
+    fun editComment(editedComment: Comment, commentToReplaceId: Long) {
+        for (item in _commentsList) {
+            if (item.commentId == commentToReplaceId && item.noteId == editedComment.noteId) {
                 editedComment.commentIndex = item.commentIndex
                 editedComment.isEdited = true
                 _commentsList[_commentsList.indexOf(item)] = editedComment

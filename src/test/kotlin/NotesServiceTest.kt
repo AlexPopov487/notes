@@ -138,7 +138,7 @@ class NotesServiceTest {
 
         val commentForFirstNote = Comment(noteId = 1, message = "That's a great note there!")
         notesService.createComment(commentForFirstNote)
-        notesService.deleteComment(commentForFirstNote)
+        notesService.deleteComment(1)
 
         val expected = !notesService.commentsList.contains(commentForFirstNote)
 
@@ -152,7 +152,7 @@ class NotesServiceTest {
 
         val commentForFirstNote = Comment(noteId = 1, message = "That's a great note there!")
 //        notesService.createComment(commentForFirstNote)
-        notesService.deleteComment(commentForFirstNote)
+        notesService.deleteComment(1)
 
         val expected = !notesService.commentsDustbin.contains(commentForFirstNote)
 
@@ -166,11 +166,11 @@ class NotesServiceTest {
 
         val commentForFirstNote = Comment(noteId = 1, message = "That's a great note there!")
         notesService.createComment(commentForFirstNote)
-        notesService.deleteComment(commentForFirstNote)
+        notesService.deleteComment(1)
 
         val expectedBeforeRestored = notesService.commentsDustbin.contains(commentForFirstNote)
 
-        notesService.restoreComment(commentForFirstNote)
+        notesService.restoreComment(1)
 
         val expectedAfterRestored = !notesService.commentsDustbin.contains(commentForFirstNote) &&
                 notesService.commentsList.contains(commentForFirstNote)
@@ -191,7 +191,7 @@ class NotesServiceTest {
 
         val expected = !notesService.commentsDustbin.contains(commentForFirstNote)
 
-        notesService.restoreComment(commentForFirstNote)
+        notesService.restoreComment(1)
 
         assertTrue(expected)
     }
@@ -204,9 +204,9 @@ class NotesServiceTest {
         val commentForFirstNote = Comment(noteId = 1, message = "That's a great note there!")
         notesService.createComment(commentForFirstNote)
 
-        val newComment = Comment(1, "I'm here to replace the first comment")
+        val newComment = Comment(noteId= 1, message= "I'm here to replace the first comment")
 
-        notesService.editComment(newComment, commentForFirstNote)
+        notesService.editComment(newComment, 1)
 
         val expected = notesService.commentsList[0].isEdited
 
@@ -221,9 +221,9 @@ class NotesServiceTest {
         val commentForFirstNote = Comment(noteId = 1, message = "That's a great note there!")
         notesService.createComment(commentForFirstNote)
 
-        val newComment = Comment(2, "I'm here to replace the first comment")
+        val newComment = Comment(noteId= 2, message= "I'm here to replace the first comment")
 
-        notesService.editComment(newComment, commentForFirstNote)
+        notesService.editComment(newComment, 2)
 
         val expected = !notesService.commentsList[0].isEdited
 
